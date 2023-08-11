@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package radar4d.data_access;
+
+import "radar4d_api/data_access/data_description.proto";
+
+// \brief The AVX sensor data access service
+// 
+// This service allows an external software to request sensor data during the
+// simulation. 
+//
+service DataAccess {
+  // Requests the data identified by the specified sensor data identifier.
+  // Returns the requested data as a serialized sensor data buffer.
+  //
+  rpc RequestData(DataIdentifier) returns (DataBuffer) {}
+}

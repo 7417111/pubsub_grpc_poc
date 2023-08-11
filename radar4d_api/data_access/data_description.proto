@@ -1,0 +1,41 @@
+
+syntax = "proto3";
+
+package radar4d.data_access;
+
+import "google/protobuf/duration.proto";
+
+// \brief Key to retrieve a sensor data.
+//
+message DataIdentifier {
+  // A unique identifier for a sensor data.
+  //
+  string data_id = 1;
+}
+
+message DataBuffer {
+  // A data buffer serialized using radar4d_api.data.Data proto 
+  // message.
+  //
+  bytes data = 1;
+}
+// \brief meta data associated to the data produced.
+//
+// message Metadata {
+
+// }
+// \brief Content of the notifications sent any time a sensor data is produced.
+//
+//
+message DataDescription {
+  // The identifier of the produced data. To be used by the subscriber to 
+  // retrieve the sensor data.
+  //
+  DataIdentifier data_id = 1;
+  // The timestamp of the produced data.
+  //
+  google.protobuf.Duration produced_timestamp = 2;
+  // \cMetadata.
+  //
+  // Metadata metadata = 3;
+}
