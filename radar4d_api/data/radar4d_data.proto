@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package radar4d.data;
+
+import "google/protobuf/duration.proto";
+
+message Radar4dData {
+    // The simulation time stamp in which the data was produced.
+    //
+    google.protobuf.Duration time_stamp = 1;
+    
+    // data which was produced 
+    //
+    oneof data {
+      RadarIntensityCube radar_intensity_cube = 2;
+    //   Object tracking result = 3;
+    //   3DPoint = 4;
+    }
+  }
+
+message RadarIntensityCube {
+    repeated RadarIntensity intensity = 1; // note, can't be "packed"
+
+}
+
+
+message RadarIntensity {
+    // 
+    float intensity = 1 [packed=true];
+}
+message Vector3d {
+    // a 3d point 
+    float  x = 1;
+    float  y = 2;
+    float  z = 3;
+}
+message PointCloud {
+    repeated Vector3d point = 1;
+}

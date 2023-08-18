@@ -4,6 +4,7 @@ syntax = "proto3";
 package radar4d.data_access;
 
 import "google/protobuf/duration.proto";
+import "radar4d_api/common.proto";
 
 // \brief Key to retrieve a sensor data.
 //
@@ -34,7 +35,7 @@ message DataDescription {
   DataIdentifier data_id = 1;
   // The timestamp of the produced data.
   //
-  google.protobuf.Duration produced_timestamp = 2;
+  radar4d.common.Timestamp produced_timestamp = 2;
   // \cMetadata.
   //
   // Metadata metadata = 3;

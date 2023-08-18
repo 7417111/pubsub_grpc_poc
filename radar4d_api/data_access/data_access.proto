@@ -4,7 +4,7 @@ package radar4d.data_access;
 
 import "radar4d_api/data_access/data_description.proto";
 
-// \brief The AVX sensor data access service
+// \brief The radar4d data access service
 // 
 // This service allows an external software to request sensor data during the
 // simulation. 

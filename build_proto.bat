@@ -4,6 +4,8 @@
 
 
 python -m grpc_tools.protoc -I. -Iradar4d_api --python_out=. --grpc_python_out=. radar4d_api\data_access\*.proto
+python -m grpc_tools.protoc -I. -Iradar4d_api --python_out=. --grpc_python_out=. radar4d_api\data\*.proto
+python -m grpc_tools.protoc -I. -Iradar4d_api --python_out=. --grpc_python_out=. radar4d_api\*.proto
 
 
 

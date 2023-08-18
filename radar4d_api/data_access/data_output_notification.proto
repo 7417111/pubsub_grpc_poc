@@ -5,13 +5,13 @@ package radar4d.data_access;
 import "radar4d_api/data_access/data_description.proto";
 import "google/protobuf/empty.proto";
 
-// \brief The data access service.
+// \brief The radar4d data access service.
 // 
 // This service allows to get notified when new data is available in 
 // the data store.
 //
 service DataNotifier {
-  // Subscribes to the stream publishing notifications about new data
+  // Subscribes to the stream publishing notifications about new data available
   // in the data store. This stream ends when the program is completed (ended).
   // Returns a stream of data descriptions containing all needed 
   // information to identify the type of the newly generated data and to 
