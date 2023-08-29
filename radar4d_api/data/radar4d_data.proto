@@ -2,12 +2,12 @@ syntax = "proto3";
 
 package radar4d.data;
 
-import "google/protobuf/duration.proto";
+import "radar4d_api/common.proto";
 
 message Radar4dData {
     // The simulation time stamp in which the data was produced.
     //
-    google.protobuf.Duration time_stamp = 1;
+    radar4d.common.Timestamp time_stamp = 1;
     
     // data which was produced 
     //
@@ -18,22 +18,70 @@ message Radar4dData {
     }
   }
 
-message RadarIntensityCube {
-    repeated RadarIntensity intensity = 1; // note, can't be "packed"
 
+//
+// \brief intensity array (following azithmuth) stacked in elevation order
+//
+message RadarIntensityCube {
+    repeated RadarIntensityArray intensity_azimuth = 1; // note, can't be "packed"
+}
+//
+// \brief 
+//
+message RadarIntensityArray {
+    repeated RadarIntensity intensity = 1; // note, can't be "packed"
 }
 
-
+//
+// \brief 
+//
 message RadarIntensity {
     // 
-    float intensity = 1 [packed=true];
+    repeated float intensity = 1 [packed=true];
 }
-message Vector3d {
-    // a 3d point 
-    float  x = 1;
-    float  y = 2;
-    float  z = 3;
+
+//
+// \brief 
+//
+message PointCluster {
+    repeated radar4d.common.Vector3d point = 1;
 }
+
+//
+// \brief 
+//
 message PointCloud {
-    repeated Vector3d point = 1;
+    repeated PointCluster cluster = 1;
+}
+
+//
+// \brief Moving object in the environment as detected and perceived by the
+// sensor.
+//
+// The parent frame of a detected moving object is the virtual sensor coordinate
+// system.
+//
+// /note The virtual sensor coordinate system is relative to the vehicle coordinate
+// system which has its origin in the center of the rear axle of the ego
+// vehicle. This means if virtual sensor mounting position and orientation are
+// set to (0,0,0) the virtual sensor coordinate system coincides with the
+// vehicle coordinate system.
+//
+message DetectedMovingObject
+{
+    // The base parameters of the moving object.
+    //
+    // \note The bounding box does NOT include mirrors for vehicles.
+    // \note The height includes the ground_clearance. It always goes from the
+    // top to the ground.
+    //
+    radar4d.common.BaseMoving base = 1;
+
+    // The root mean squared error of the base parameters of the detected
+    // moving object (e.g. car). \c MovingObject::base has to be
+    // identical for all \c #candidate moving objects.
+    //
+    radar4d.common.BaseMoving base_rmse = 2;
+
+ 
 }

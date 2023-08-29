@@ -3,7 +3,6 @@ syntax = "proto3";
 
 package radar4d.data_access;
 
-import "google/protobuf/duration.proto";
 import "radar4d_api/common.proto";
 
 // \brief Key to retrieve a sensor data.

@@ -3,23 +3,25 @@ import queue
 import sys
 import grpc
 import traceback
+
 from google.protobuf import empty_pb2
 from radar4d_api.data_access import data_access_pb2_grpc
-from radar4d_api.data_access import data_description_pb2
 
+# from radar4d_api.data_access import data_description_pb2
 from radar4d_api.data_access import data_output_notification_pb2_grpc
 
-DEFAULT_HOST = "127.0.0.1"  
-DEFAULT_NOTIFIER_PORT = "54321"  
-DEFAULT_DATA_PORT = "54545"  
+DEFAULT_HOST = "127.0.0.1"
+DEFAULT_NOTIFIER_PORT = "54321"
+DEFAULT_DATA_PORT = "54545"
 MAX_MESSAGE_LENGTH = 80000000  # limit size of the serialized protobuf message in bytes
-TIMEOUT = 180 # seconds
+
+
 def notif_monitoring(notification_queue, stop):
     notification_channel = grpc.insecure_channel(DEFAULT_HOST + ":" + DEFAULT_NOTIFIER_PORT)
     notification_stub = data_output_notification_pb2_grpc.DataNotifierStub(notification_channel)
 
     try:
-        data_descriptions_stream = notification_stub.Subscribe(empty_pb2.Empty(), wait_for_ready=True, timeout=TIMEOUT)
+        data_descriptions_stream = notification_stub.Subscribe(empty_pb2.Empty(), wait_for_ready=True)
         for data_description in data_descriptions_stream:
             notification_queue.put(data_description)
             if stop():
@@ -27,31 +29,31 @@ def notif_monitoring(notification_queue, stop):
                 break
     except grpc.RpcError as rpc_error:
         if rpc_error.code() == grpc.StatusCode.DEADLINE_EXCEEDED:
-            print("AVX server is not ready. Please check if AVX is running and relaunch this script", flush=True)
+            print("server is not ready. Please check if AVX is running and relaunch this script", flush=True)
         else:
             print("rpc_error = %s", str(rpc_error), flush=True)
     print("Notification stream ended", flush=True)
 
 
-
-def get_data_frame(data_description,data_stub):
+def get_data_frame(data_description, data_stub):
     # AVX may send 'localhost', but the grpc channel creation function requires a numerical address
     print("===============================")
     print(f"last_notif = {data_description}")
-        # print(f"data_description.data_by_identifiers[0].data_id={data_description.data_by_identifiers[0].data_id}", flush=True)
+    # print(f"data_description.data_by_identifiers[0].data_id={data_description.data_by_identifiers[0].data_id}", flush=True)
     try:
         data_buffer = data_stub.RequestData(data_description.data_id, wait_for_ready=True)
     except grpc.RpcError as rpc_error:
         print("rpc_error = %s", str(rpc_error), flush=True)
 
     print(f"data_buffer = {data_buffer}")
+
+
 def main():
     # Start a thread to subscribe to AVX notification channel
     notification_queue = queue.Queue()  # FIFO buffer
     thread_stop_flag = False
     thread = Thread(target=notif_monitoring, args=(notification_queue, lambda: thread_stop_flag))
     thread.start()
-
 
     data_channel = grpc.insecure_channel(
         DEFAULT_HOST + ":" + DEFAULT_DATA_PORT,
@@ -69,7 +71,6 @@ def main():
                 # As a result, we need to unload all notifications in the notification buffer
                 for i in range(notification_queue.qsize()):
                     last_notif = notification_queue.get()
-                                # a dedicated new stub will be created every time by the get_data_frame() function
                 get_data_frame(last_notif, data_stub)
         print("Notification thread ended", flush=True)
     except KeyboardInterrupt:

@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 package radar4d.common;
-
+// =============================
 // inspired from iso3 standard 
+// =============================
 
 //
 // \brief A cartesian 3D vector for positions, velocities or accelerations or
@@ -229,4 +230,88 @@ message Identifier
     // \endrules
     //
     optional uint32 value = 1;
+}
+message BaseMoving
+{
+    // The 3D dimension of the moving object (its bounding box).
+    //
+    // \note The bounding box does NOT include side mirrors for vehicles.
+    //
+    optional Dimension3d dimension = 1;
+
+    // The reference point for position and orientation: the center (x,y,z) of
+    // the bounding box.
+    //
+    optional Vector3d position = 2;
+
+    // The relative orientation of the moving object w.r.t. its parent frame,
+    // noted in the parent frame. The orientation becomes global/absolute if
+    // the parent frame is inertial (all parent frames up to ground truth).
+    //
+    // \f$ Origin_{\text{base moving entity}} :=
+    // Rotation_{yaw,pitch,roll}( \f$ \c #orientation \f$ )*
+    // (Origin_{\text{parent coord system}} -
+    // \f$ \c #position \f$ ) \f$
+    //
+    // \note There may be some constraints how to align the orientation w.r.t.
+    // to some stationary object's or entity's definition.
+    //
+    optional Orientation3d orientation = 3;
+
+    // The relative velocity of the moving object w.r.t. the parent frame,
+    // noted in the parent frame. The velocity becomes global/absolute if
+    // the parent frame does is inertial (all parent frames up to ground truth).
+    //
+    // \c #position \f$ (t) := \f$ \c #position \f$ (t-dt)+ \f$ \c #velocity \f$
+    // *dt \f$
+    //
+    optional Vector3d velocity = 4;
+
+    // The relative acceleration of the moving object w.r.t. its parent frame,
+    // noted in the parent frame. The acceleration becomes global/absolute if
+    // the parent frame is inertial (all parent frames up to ground truth).
+    //
+    // \c #position \f$ (t) := \f$ \c #position \f$ (t-dt)+ \f$ \c #velocity \f$
+    // *dt+ \f$ \c #acceleration \f$ /2*dt^2\f$
+    //
+    // \c #velocity \f$ (t) := \f$ \c #velocity \f$ (t-dt)+ \f$ \c #acceleration
+    // \f$ *dt \f$
+    //
+    optional Vector3d acceleration = 5;
+
+    // The relative orientation rate of the moving object w.r.t. its parent
+    // frame and parent orientation rate in the center point of the bounding box
+    // (origin of the bounding box frame), noted in the parent frame.
+    // The orientation becomes global/absolute if the parent frame is inertial
+    // (all parent frames up to ground truth).
+    //
+    // \c #orientation \f$ .yaw(t) := \f$ \c #orientation_rate \f$ .yaw(t) * dt
+    // + \f$ \c #orientation \f$ .yaw(t-dt) \f$
+    //
+    // \c #orientation \f$ .pitch(t) := \f$ \c #orientation_rate \f$ .pitch(t) *
+    // dt + \f$ \c #orientation \f$ .pitch(t-dt) \f$
+    //
+    // \c #orientation \f$ .roll(t) := \f$ \c #orientation_rate \f$ .roll(t) *
+    // dt + \f$ \c #orientation \f$ .roll(t-dt)\f$
+    //
+    optional Orientation3d orientation_rate = 6;
+
+    // The relative orientation acceleration of the moving object w.r.t. its
+    // parent frame and parent orientation acceleration in the center point of
+    // the bounding box (origin of the bounding box frame), noted in the parent
+    // frame. The orientation becomes global/absolute if the parent frame is
+    // inertial (all parent frames up to ground truth).
+    //
+    // \c #orientation_rate \f$ .yaw(t) := \f$ \c #orientation_acceleration \f$
+    // .yaw(t) * dt + \f$ \c #orientation_rate \f$ .yaw(t-dt) \f$
+    //
+    // \c #orientation_rate \f$ .pitch(t) := \f$ \c #orientation_acceleration
+    // \f$ .pitch(t) * dt
+    // + \f$ \c #orientation_rate \f$ .pitch(t-dt) \f$
+    //
+    // \c #orientation_rate \f$ .roll(t) := \f$ \c #orientation_acceleration \f$
+    // .roll(t) * dt +
+    //  \f$ \c #orientation_rate \f$ .roll(t-dt) \f$
+    //
+    optional Orientation3d orientation_acceleration = 8;
 }
