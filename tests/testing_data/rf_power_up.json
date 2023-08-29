@@ -1,0 +1,23 @@
+[
+    {
+        "index": 0,
+        "ae_command": true,
+        "command": [
+            "1234",
+            "4321",
+            "8005",
+            "0012",
+            "0000",
+            "0000",
+            "0001",
+            "7fe7",
+            "4000",
+            "0004",
+            "8b67"
+        ],
+        "MSG": "AWR_DEV_RF_POWERUP_MSG",
+        "SBID": "AWR_DEV_RF_POWERUP_SB",
+        "description": "Powers up RF part."
+    }
+]
+

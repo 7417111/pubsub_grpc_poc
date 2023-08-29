@@ -1,0 +1,24 @@
+[
+    {
+        "index": 0,
+        "ae_command": true,
+        "command": [
+            "1234",
+            "4321",
+            "0281",
+            "0016",
+            "0000",
+            "0000",
+            "0001",
+            "fd67",
+            "0140",
+            "0008",
+            "0001",
+            "0000",
+            "dc71"
+        ],
+        "MSG": "AWR_FRAMESTARTSTOP_CONF_MSG",
+        "SBID": "AWR_FRAMESTARTSTOP_CONF_MSG",
+        "description": "starts acquisition in SW triggering mode."
+    }
+]

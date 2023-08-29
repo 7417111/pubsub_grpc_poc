@@ -1,0 +1,19 @@
+// we want to keep all confiiguration in an unique structure here
+syntax = "proto3";
+
+package radar4d.configuration;
+
+message Acquisition {
+    int index = 1;
+    bool ae_command = 2;
+    repeat command = 3; // 15 commands
+    string MSG = 4;
+    string SBID = 5;
+    string description = 6;
+}
+message Metadata {
+    chirp_count
+    frame_count
+    chirp_duration
+    frame_duration
+}
